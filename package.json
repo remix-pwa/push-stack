@@ -12,7 +12,7 @@
     "build:worker": "remix-pwa build",
     "dev:remix": "remix dev",
     "dev:worker": "remix-pwa dev",
-    "dev:trigger": "@trigger.dev/cli@latest dev"
+    "dev:trigger": "npx @trigger.dev/cli@latest dev"
   },
   "dependencies": {
     "@remix-pwa/cache": "^2.0.7",
