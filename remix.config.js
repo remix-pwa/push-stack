@@ -1,3 +1,5 @@
+import { flatRoutes } from 'remix-flat-routes';
+
 /** @type {import('@remix-pwa/dev').WorkerConfig} */
 export default {
   ignoredRouteFiles: ["**/.*"],
@@ -5,4 +7,7 @@ export default {
   serverDependenciesToBundle: [
     /@remix-pwa\/.*/
   ],
+  routes: async defineRoutes => {
+    return flatRoutes('routes', defineRoutes)
+  },
 };
