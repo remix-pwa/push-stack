@@ -30,6 +30,9 @@ self.addEventListener('activate', (event: ExtendableEvent) => {
 
 const dataHandler = networkFirst({
   cache: dataCache,
+  cacheQueryOptions: {
+    ignoreSearch: false,
+  }
 });
 
 const assetsHandler = cacheFirst({
@@ -44,7 +47,7 @@ const assetsHandler = cacheFirst({
 // route is not matched by any of the worker action/loader.
 export const defaultFetchHandler: DefaultFetchHandler = ({ context, request }) => {
   const type = matchRequest(request);
-
+  
   if (type === 'asset') {
     return assetsHandler(context.event.request);
   }
