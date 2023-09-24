@@ -6,6 +6,34 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  devices   Device[]
+}
+
+model Device {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  p256dh    String
+  auth      String
+  endpoint  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // This is the subscription expiration date
+  // A simple solution to remove expired subscriptions is to run a cron job
+  // every day that deletes all subscriptions that have expired.
+  //
+  // You typically want to remove this field as you delete this device
+  // when the user logs out.
+  expiresAt DateTime
 }
