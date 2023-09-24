@@ -5,3 +5,9 @@ node_modules
 /public/build
 /public/entry.worker.js
 .env
+
+*.db
+*.sqlite
+*.sqlite3
+
+**/DS_Store
