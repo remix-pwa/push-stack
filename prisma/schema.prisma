@@ -11,19 +11,24 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  devices   Device[]
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  username    String
+  password    String
+  description String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  // This allows us to trigger a cascade push
+  // to all the user device.
+  devices     Device[]
 }
 
 model Device {
   id        Int      @id @default(autoincrement())
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
+  // Push subscription data
   p256dh    String
   auth      String
   endpoint  String
