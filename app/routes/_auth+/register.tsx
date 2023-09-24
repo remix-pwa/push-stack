@@ -31,9 +31,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Register() {
-  const [form, { email, username, password } ] = useForm({
+  const [form, { email, username, password }] = useForm({
     id: 'registration-form',
-    constraint:getFieldsetConstraint(registrationFormSchema),
+    constraint: getFieldsetConstraint(registrationFormSchema),
     lastSubmission: undefined,
     onValidate({ formData, }) {
       return parse(formData, { schema: registrationFormSchema });
@@ -46,21 +46,21 @@ export default function Register() {
       <main className="max-w-lg px-6 py-8 mx-auto rounded-lg shadow-md h-fit">
         <h3>Remix</h3>
         <p>Create an account</p>
-          <Form method="post" {...form.props}>
-            <FormItem>
-              <Label htmlFor={username.name}>Username</Label>
-              <Input type="text" name={username.name} id={username.name} />
-            </FormItem>
-            <FormItem>
-              <Label htmlFor={email.name}>Email</Label>
-              <Input type="email" name={email.name} id={email.name} />
-            </FormItem>
-            <FormItem>
-              <Label htmlFor={password.name}>Password</Label>
-              <Input type="password" name={password.name} id={password.name} />
-            </FormItem>
-            <Button type="submit">Submit</Button>
-          </Form>
+        <Form method="post" {...form.props}>
+          <FormItem>
+            <Label htmlFor={username.name}>Username</Label>
+            <Input type="text" name={username.name} id={username.name} />
+          </FormItem>
+          <FormItem>
+            <Label htmlFor={email.name}>Email</Label>
+            <Input type="email" name={email.name} id={email.name} />
+          </FormItem>
+          <FormItem>
+            <Label htmlFor={password.name}>Password</Label>
+            <Input type="password" name={password.name} id={password.name} />
+          </FormItem>
+          <Button type="submit">Submit</Button>
+        </Form>
       </main>
     </div>
   )
