@@ -14,6 +14,7 @@ import tailwind from './tailwind.css';
 import { LiveReload, useSWEffect } from "@remix-pwa/sw";
 import { getTheme } from "./utils/server/theme.server";
 import { ThemeProvider } from "./utils/providers/ThemeProvider";
+import { useEffect } from "react";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwind },
@@ -30,6 +31,12 @@ export default function App() {
   useSWEffect();
   const { theme } = useLoaderData<typeof loader>();
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    console.log(window.__remixContext);
+  })
+
   return (
     <ThemeProvider ssr_theme={theme}>
       <html lang="en">
@@ -40,7 +47,7 @@ export default function App() {
           <link rel="manifest" href="/manifest.webmanifest" />
           <Links />
         </head>
-        <body>
+        <body className="dark:bg-slate-800">
           <Outlet />
           <ScrollRestoration />
           <Scripts />
