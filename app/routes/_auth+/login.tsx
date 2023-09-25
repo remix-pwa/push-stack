@@ -1,39 +1,123 @@
-import { Form } from "@remix-run/react";
+import { Form, useActionData } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { z } from "zod";
+import type { Submission} from '@conform-to/react';
 import { useForm } from '@conform-to/react';
 import { getFieldsetConstraint, parse } from '@conform-to/zod';
 
 import { type ActionFunctionArgs } from "@remix-run/node";
 import { Label } from "~/components/ui/label";
 import FormItem from "~/components/form";
+import { getUserByEmail, verifyLogin } from "~/utils/models/user.server";
+import { typedjson } from "remix-typedjson";
+import { createUserSession } from "~/utils/server/user.server";
+import { useEffect } from "react";
+import { hash } from "bcrypt";
+
+// Remember, you can add more login types to your form,
+// including Google, Discord, Github, etc.
+enum LoginType {
+  FORM = 'form',
+}
 
 const loginFormSchema = z.object({
-  email: z.string().email({
+  email: z.string({
+    required_error: "Email is required",
+  }).email({
     message: "Please enter a valid email address",
   }),
-  password: z.string().min(8, {
+  password: z.string({
+    required_error: "Password is required",
+  }).min(8, {
     message: "Password must be at least 8 characters long",
   }).max(32, {
     message: "Password must be at most 32 characters long",
   }),
+  type: z.enum([LoginType.FORM]),
 });
 
+type ActionData = Submission<{
+  email: string;
+  password: string;
+  type: LoginType;
+}>
+
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return null;
+  const formData = await request.formData();
+  const form = Object.fromEntries(formData.entries());
+
+  const type = form.type as LoginType;
+  const email = form.email as string;
+  const password = form.password as string;
+
+  const submission = parse(formData, { schema: loginFormSchema });
+
+  if (submission.intent !== 'submit' || !submission.value) {
+    return typedjson<ActionData>(submission, { status: 400 })
+  }
+
+  // You can extend your form here and even add more fields,
+  // just remember to pass them via the form!
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const rememberUser = null;
+  const redirectTo = null;
+
+  console.log('form', form, type);
+
+  switch (type) {
+    case LoginType.FORM:
+      const validUser = await getUserByEmail(email);
+
+      if (!validUser) {
+        return typedjson<ActionData>({
+          intent: 'submit',
+          payload: {
+            email: email,
+            password: '****',
+            type: LoginType.FORM,
+          },
+          error: {
+            email: ['No user found with that email address'],
+          }
+        }, { status: 400 })
+      }
+
+      const user = await verifyLogin(email, (await hash(password, 10)));
+
+      if (!user) {
+        return typedjson<ActionData>(
+          { error: { email: ["Invalid password. Try again"] }, intent: "submit", payload: { email, password: '****', type } },
+          { status: 400 }
+        );
+      }
+
+      return createUserSession({
+        request,
+        userId: user.id,
+        remember: /* remember === "on" ? true : false */ true,
+        redirectTo: typeof redirectTo === "string" ? redirectTo : "/dashboard",
+      });
+    default:
+      return new Response('Invalid login type', { status: 400 });
+  }
 }
 
 export default function Login() {
-  const [form, { email, password }] = useForm({
-    id: 'registration-form',
+  const actionData = useActionData();
+  const [form, { email, password, type }] = useForm({
+    id: 'login-form',
     constraint: getFieldsetConstraint(loginFormSchema),
-    lastSubmission: undefined,
+    lastSubmission: actionData,
     onValidate({ formData, }) {
       return parse(formData, { schema: loginFormSchema });
     },
     shouldRevalidate: 'onBlur'
   })
+
+  useEffect(() => {
+    console.log('actionData', actionData);
+  }, [actionData]);
 
   return (
     <div className="flex items-center content-center justify-center w-screen h-screen">
@@ -52,6 +136,7 @@ export default function Login() {
             <Label htmlFor={password.name}>Password</Label>
             <Input type="password" name={password.name} id={password.name} />
           </FormItem>
+          <Input type="hidden" name={type.name} value={LoginType.FORM} />
           <Button type="submit">Submit</Button>
         </Form>
       </main>
