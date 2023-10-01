@@ -18,6 +18,7 @@ async function main() {
     data: {
       email: 'snoringtroll@gmail.com',
       username: 'rollerblades',
+      image: 'https://th.bing.com/th/id/OIP.YjJSBQVO5Cy9RBxwNqfj7AHaJ5?pid=ImgDet&rs=1',
       password: '$2y$10$MCNVK0FU9bWS9E.WQ8UX8exPF/LM/y5piTxh5D/78rQly.nGXGU62' // skates09
     }
   })
@@ -26,7 +27,7 @@ async function main() {
     data: {
       email: 'fasthare@test.com',
       username: 'fastesthare',
-      password: '$2y$10$3dgpxxBNc01kDRK5BYJLTOMiiKzzLmS0l8WwibptIC6IaduuiY5z.' // lovespeed
+      password: '$2y$10$jmVLvOOyYsqtCDP6jCKbsOhSshsNshJ.12.2V.XbH8JUQ3wCZPjQ2' // lovespeed
     }
   })
 
