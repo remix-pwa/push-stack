@@ -2,7 +2,7 @@ import { Form, useActionData } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { z } from "zod";
-import type { Submission} from '@conform-to/react';
+import type { Submission } from '@conform-to/react';
 import { useForm } from '@conform-to/react';
 import { getFieldsetConstraint, parse } from '@conform-to/zod';
 
@@ -13,7 +13,6 @@ import { getUserByEmail, verifyLogin } from "~/utils/models/user.server";
 import { typedjson } from "remix-typedjson";
 import { createUserSession } from "~/utils/server/user.server";
 import { useEffect } from "react";
-import { hash } from "bcrypt";
 
 // Remember, you can add more login types to your form,
 // including Google, Discord, Github, etc.
@@ -63,8 +62,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const rememberUser = null;
   const redirectTo = null;
 
-  console.log('form', form, type);
-
   switch (type) {
     case LoginType.FORM:
       const validUser = await getUserByEmail(email);
@@ -78,12 +75,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             type: LoginType.FORM,
           },
           error: {
-            email: ['No user found with that email address'],
+            email: ['No user found with this email address'],
           }
         }, { status: 400 })
       }
 
-      const user = await verifyLogin(email, (await hash(password, 10)));
+      const user = await verifyLogin(email, password);
 
       if (!user) {
         return typedjson<ActionData>(

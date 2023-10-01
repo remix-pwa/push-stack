@@ -1,4 +1,3 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Links,
@@ -14,11 +13,9 @@ import tailwind from './tailwind.css';
 import { LiveReload, useSWEffect } from "@remix-pwa/sw";
 import { getTheme } from "./utils/server/theme.server";
 import { ThemeProvider } from "./utils/providers/ThemeProvider";
-import { useEffect } from "react";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: tailwind },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -30,12 +27,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function App() {
   useSWEffect();
   const { theme } = useLoaderData<typeof loader>();
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    console.log(window.__remixContext);
-  })
 
   return (
     <ThemeProvider ssr_theme={theme}>

@@ -6,7 +6,7 @@ import { getUserId } from "~/utils/server/user.server"
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUserId(request)
 
-  if (user) {
+  if (user !== undefined) {
     return redirect("/dashboard");
   }
 

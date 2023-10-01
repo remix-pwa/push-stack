@@ -1,6 +1,6 @@
 import { redirect } from 'remix-typedjson';
 import type { SessionData } from './session.server';
-import { destroySession, getCookieSession } from './session.server';
+import { commitSession, destroySession, getCookieSession } from './session.server';
 import { getUserById } from '../models/user.server';
 
 const USER_SESSION_KEY: keyof SessionData = 'userId';
@@ -70,11 +70,7 @@ export const createUserSession = async ({
 
   return redirect(redirectTo, {
     headers: {
-      "Set-Cookie": await sessionStorage.commitSession(session, {
-        maxAge: remember
-          ? 60 * 60 * 24 * 7 // 7 days
-          : undefined,
-      }),
+      "Set-Cookie": await commitSession(session),
     },
   });
 }

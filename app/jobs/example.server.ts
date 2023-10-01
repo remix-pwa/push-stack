@@ -1,5 +1,5 @@
 import { eventTrigger } from "@trigger.dev/sdk";
-import { client } from "~/trigger.server";
+import { client } from "~/utils/server/trigger.server";
 
 // Your first job
 // This Job will be triggered by an event, log a joke to the console, and then wait 5 seconds before logging the punchline
