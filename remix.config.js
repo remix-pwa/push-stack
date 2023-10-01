@@ -1,13 +1,21 @@
-import { flatRoutes } from 'remix-flat-routes';
-
 /** @type {import('@remix-pwa/dev').WorkerConfig} */
-export default {
+module.exports = {
   ignoredRouteFiles: ["**/.*"],
   tailwind: true,
   serverDependenciesToBundle: [
-    /@remix-pwa\/.*/
+    /@remix-pwa\/.*/,
+    "bcryptjs",
+    "@epic-web/remember",
+    "chalk",
+    "ansi-styles",
+    "#ansi-styles",
+    '#supports-color',
   ],
-  routes: async defineRoutes => {
-    return flatRoutes('routes', defineRoutes)
+  serverModuleFormat: "cjs",
+  browserNodeBuiltinsPolyfill: {
+    modules: {
+      crypto: true,
+    }
   },
+  serverNodeBuiltinsPolyfill: true  
 };
