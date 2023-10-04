@@ -11,8 +11,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   switch (type) {
     case "send-push":
-      console.log("Sending push notification");
-
       await client.sendEvent({
         name: "push.user",
         payload: {
@@ -29,7 +27,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       const endpoint = data.get("endpoint") as string;
       const p256dh = data.get("p256dh") as string;
 
-      registerUserDevice(Number(userId), {
+      await registerUserDevice(Number(userId), {
         auth,
         endpoint,
         p256dh,
