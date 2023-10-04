@@ -26,8 +26,6 @@ model User {
 
 model Device {
   id        Int      @id @default(autoincrement())
-  platform  String
-  mobile    Boolean
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
   // Push subscription data
