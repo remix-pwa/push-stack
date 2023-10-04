@@ -1,12 +1,12 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import { redirect } from "remix-typedjson"
+import { redirect } from "@remix-run/node"
 import { getUserId } from "~/utils/server/user.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await getUserId(request)
 
-  if (user !== undefined) {
+  if (user) {
     return redirect("/dashboard");
   }
 

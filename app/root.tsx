@@ -1,4 +1,4 @@
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { json, type LinksFunction, type LoaderFunctionArgs } from "@remix-run/node";
 import {
   Links,
   Meta,
@@ -7,7 +7,6 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import { typedjson } from "remix-typedjson";
 
 import tailwind from './tailwind.css';
 import { LiveReload, useSWEffect } from "@remix-pwa/sw";
@@ -21,7 +20,7 @@ export const links: LinksFunction = () => [
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const theme = await getTheme(request);
 
-  return typedjson({ theme });
+  return json({ theme });
 };
 
 export default function App() {

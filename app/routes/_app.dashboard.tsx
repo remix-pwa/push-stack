@@ -11,7 +11,9 @@ import { getUserId, requireUserId } from "~/utils/server/user.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   console.log('Loading dashboard', await getUserId(request));
+
   const user = await requireUserId(request);
+
   const currentUserDevices = await prisma.device.findMany({
     where: {
       userId: Number(user),
