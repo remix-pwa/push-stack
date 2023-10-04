@@ -58,8 +58,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   // You can extend your form here and even add more fields,
   // just remember to pass them via the form!
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const rememberUser = null;
   const redirectTo = null;
 
   switch (type) {
@@ -92,7 +90,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       return createUserSession({
         request,
         userId: user.id,
-        remember: /* remember === "on" ? true : false */ true,
         redirectTo: typeof redirectTo === "string" ? redirectTo : "/dashboard",
       });
     default:

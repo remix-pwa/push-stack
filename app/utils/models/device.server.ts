@@ -5,12 +5,10 @@ type DevicePayload = {
   auth: Device['auth'];
   endpoint: Device['endpoint'];
   p256dh: Device['p256dh'];
-  platform: Device['platform'];
-  mobile: Device['mobile'];
 } 
 
 export const registerUserDevice = async (userId: User["id"], device: DevicePayload) => {
-  const { auth, endpoint, p256dh, platform, mobile } = device;
+  const { auth, endpoint, p256dh } = device;
 
   const foundDevice = await prisma.device.findFirst({
     where: {
@@ -30,8 +28,6 @@ export const registerUserDevice = async (userId: User["id"], device: DevicePaylo
       endpoint,
       auth,
       p256dh,
-      platform,
-      mobile,
     },
   });
 

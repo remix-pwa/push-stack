@@ -32,15 +32,6 @@ export const getUserId = async (request: Request) => {
   return session.get(USER_SESSION_KEY);
 }
 
-export const requireUser = async (request: Request) => {
-  const userId = await requireUserId(request);
-
-  const user = getUserById(Number(userId));
-  if (user) return user;
-
-  throw await logout(request);
-}
-
 export const requireUserId = async (request: Request, redirectTo: string = new URL(request.url).pathname) => {
   const userId = await getUserId(request);
 
@@ -57,12 +48,10 @@ export const requireUserId = async (request: Request, redirectTo: string = new U
 export const createUserSession = async ({
   request,
   userId,
-  remember,
   redirectTo,
 }: {
   request: Request;
   userId: number;
-  remember: boolean;
   redirectTo: string;
 }) => {
   const session = await getCookieSession(request);

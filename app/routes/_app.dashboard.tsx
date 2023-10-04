@@ -3,15 +3,13 @@ import { logger } from "@remix-pwa/sw";
 import { json } from "@remix-run/node";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, Link, Outlet, useFetcher, useLoaderData, useLocation } from "@remix-run/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Input } from "~/components/ui/input";
 import { prisma } from "~/utils/server/db.server";
-import { getUserId, requireUserId } from "~/utils/server/user.server";
+import { requireUserId } from "~/utils/server/user.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  console.log('Loading dashboard', await getUserId(request));
-
   const user = await requireUserId(request);
 
   const currentUserDevices = await prisma.device.findMany({
@@ -78,6 +76,23 @@ export default function DashboardLayout() {
   const location = useLocation();
   const fetcher = useFetcher();
 
+  const [filteredUsers, setFilteredUsers] = useState<typeof data.allUsers>(data.allUsers);
+
+  const search = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value === '') {
+      setFilteredUsers(data.allUsers);
+      return;
+    }
+
+    const filtered = data.allUsers.filter((user) => {
+      return user.username.toLowerCase().includes(value.toLowerCase());
+    });
+
+    setFilteredUsers(filtered);
+  }
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -138,12 +153,12 @@ export default function DashboardLayout() {
       </header>
       <section className="flex w-full h-full">
         <aside className={`${location.pathname === '/dashboard' ? 'block' : 'hidden sm:block'} w-full border-r sm:max-w-xs border-r-slate-500`}>
-          <Form className="mb-6">
-            <Input placeholder="Search Users" />
+          <Form className="p-2 mb-5">
+            <Input placeholder="Search Users" className="outline-none ring-0" onChange={(e) => search(e)} />
           </Form>
           <section className="space-y-6">
             {
-              data.allUsers.map(user => (
+              filteredUsers.map(user => (
                 <User
                   key={user.id}
                   //@ts-ignore

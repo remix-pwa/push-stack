@@ -13,30 +13,26 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     case "send-push":
       console.log("Sending push notification");
 
-      // await client.sendEvent({
-      //   name: "push.user",
-      //   payload: {
-      //     action: "send-push",
-      //     userId: data.get("userId"),
-      //   },
-      // })
+      await client.sendEvent({
+        name: "push.user",
+        payload: {
+          action: "send-push",
+          userId: data.get("userId"),
+          recepientId: data.get("recepientId"),
+          pushData: data.get("pushData"),
+        },
+      })
       break;
     case "register-device":
       const userId = data.get("userId") as string;
       const auth = data.get("auth") as string;
       const endpoint = data.get("endpoint") as string;
       const p256dh = data.get("p256dh") as string;
-      const platform = data.get("platform") as any;
-      const mobile = data.get("mobile") as any;
-
-      console.log({ userId, auth, endpoint, p256dh, platform, mobile });
 
       registerUserDevice(Number(userId), {
         auth,
         endpoint,
-        mobile: Boolean(mobile),
         p256dh,
-        platform,
       });
       break;
     default:

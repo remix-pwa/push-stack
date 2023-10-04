@@ -28,7 +28,6 @@ export default function UserPage() {
   const fetcher = useFetcher();
 
   const sendPush = async () => {
-
     fetcher.submit({
       type: 'send-push',
 
@@ -39,8 +38,12 @@ export default function UserPage() {
       recepientId: location.pathname.split('/')[2],
 
       /* This section deal with the notification itself */
-      title: 'New Message',
-      body: 'You have a new message from ' + recepientUser?.username,
+      pushData: JSON.stringify({
+        title: 'Hello World!',
+        options: {
+          body: 'This is a test notification from Remix PWA!',
+        }
+      })
     }, {
       action: '/push',
       method: 'POST',
@@ -50,15 +53,15 @@ export default function UserPage() {
   return (
     <div className="flex flex-col content-center w-full">
       <div className="flex flex-col w-full px-6 py-8 sm:flex-row">
-        <section className="flex flex-col sm:flex-row">
-          <img src="https://th.bing.com/th/id/OIP.YjJSBQVO5Cy9RBxwNqfj7AHaJ5?pid=ImgDet&rs=1" alt="" className="w-24 h-24 rounded-full bg-slate-500" />
+        <section className="flex flex-col sm:flex-row sm:justify-center sm:content-center sm:items-center">
+          <img src="https://th.bing.com/th/id/OIP.YjJSBQVO5Cy9RBxwNqfj7AHaJ5?pid=ImgDet&rs=1" alt="" className="content-center w-24 h-24 mx-auto mb-4 rounded-full sm:w-16 sm:h-16 lg:h-24 lg:w-24 sm:mb-0 bg-slate-500" />
         </section>
-        <section className="flex flex-col items-center w-full px-4 sm:items-start sm:h-24">
-          <p>{recepientUser?.username}</p>
-          <p>{recepientUser?.email}</p>
+        <section className="flex flex-col items-center justify-center w-full px-4 sm:items-start sm:h-24">
+          <p className="text-lg font-medium md:text-xl">{recepientUser?.username}</p>
+          <p className="text-sm md:text-base text-slate-500 dark:text-slate-400">{recepientUser?.email}</p>
         </section>
       </div>
-      <main className="flex justify-center w-full">
+      <main className="flex justify-center w-full sm:mt-6">
         <Card>
           <CardHeader>
             <CardTitle>Send a Push Notification</CardTitle>
