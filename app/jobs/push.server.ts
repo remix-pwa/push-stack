@@ -41,10 +41,12 @@ export const pushToUser = client.defineJob({
       // Send to all recepient user's devices
       // @ts-ignore
       subscriptions: [...userDevicesSubscriptions],
-      payload: {
-        title: 'Test',
-        body: 'Test',
-      },
+      notification: {
+        title: 'New Message',
+        options: {
+          body: 'Having fun here!'
+        }
+      }
     })
   },
 });

@@ -1,6 +1,7 @@
 /// <reference lib="WebWorker" />
 
 import { Storage } from "@remix-pwa/cache";
+import { Push } from "@remix-pwa/push/worker";
 import { cacheFirst, networkFirst } from "@remix-pwa/strategy";
 import type { DefaultFetchHandler } from "@remix-pwa/sw";
 import { RemixNavigationHandler, logger, matchRequest } from "@remix-pwa/sw";
@@ -72,7 +73,25 @@ self.addEventListener("message", (event) => {
   event.waitUntil(handler.handle(event));
 });
 
-self.addEventListener("push", (event: PushEvent) => {});
+class CustomPush extends Push {
+  async handlePush(event: PushEvent): Promise<void> {
+    const { data } = event;
+    console.log(data?.json(), 'data');
+    await self.registration.showNotification(data?.json().title, data?.json().options);
+  }
+
+  async handleNotificationClick(event: NotificationEvent): Promise<void> {}
+
+  async handleNotificationClose(event: NotificationEvent): Promise<void> {}
+
+  async handleError(error: ErrorEvent): Promise<void> {}
+}
+
+const pushHandler = new CustomPush();
+
+self.addEventListener("push", (event: PushEvent) => {
+  event.waitUntil(pushHandler.handlePush(event));
+});
 
 self.addEventListener("notificationclick", (event: NotificationEvent) => {});
 

@@ -93,10 +93,9 @@ export default function DashboardLayout() {
     setFilteredUsers(filtered);
   }
 
+  // Move this to `createUserSession`
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    console.log('Current user devices', data.currentUserDevices);
 
     (async () => {
       const pushSubscriptionStatus = await getPushSubscriptionStatus();
@@ -131,10 +130,6 @@ export default function DashboardLayout() {
           auth: subscriptionData.toJSON().keys!.auth,
           p256dh: subscriptionData.toJSON().keys!.p256dh,
           endpoint: subscriptionData.toJSON().endpoint!,
-          //@ts-ignore This is a rather new API for getting device info
-          platform: String(navigator.userAgentData.platform),
-          //@ts-ignore This is a rather new API for getting device info
-          mobile: navigator.userAgentData.mobile,
         }, {
           action: '/push',
           method: 'POST',
